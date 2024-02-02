@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shin Wa Kan Karate - Compleanno Felice!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #add8e6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            /* overflow: hidden; */ 
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        header {
+            background-color: #7794f0;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-weight: 900;
+            font-style: italic;
+            margin: 0;
+            color: #000; /* Colore del testo nero */
+            -webkit-text-stroke: 2px #f0f0f0; /* Contorno bianco */
+            padding: 5px; /* Aggiunge spazio attorno al testo */
+            display: inline-block; /* Rende l'elemento inline-block per adattarsi al contenuto */
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+            
+        }
+
+        h1:hover {
+            transform: scale(1.2);
+        }
+
+        main {
+            padding: 70px;
+        }
+
+        .rainbow-text {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 3em; /* Puoi regolare la dimensione del testo a tuo piacimento */
+            background-image: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red); /* Gradiente arcobaleno come sfondo */
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-stroke: 2px #000; /* Contorno bianco */
+        }
+
+        .birthday-message {
+            margin-bottom: 10px;
+            margin-top: -30px;
+        }
+
+        .birthday-message img {
+            max-width: 100%;
+            max-height: 100%; /* Ridotto ulteriormente l'altezza */
+            margin-bottom: 0px;
+            margin-top: 0px
+        }
+
+        .foot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: #000;
+            padding: 30px;
+            height: fit-content; /* Modificato da height: 100vh; */
+            text-align: center; /* Aggiunto text-align */
+        }
+
+        .foot button {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        margin-top: -90px;
+        margin-bottom: 10px; /* Aggiunto margine inferiore più piccolo */
+        }
+
+        .foot button:hover {
+            background-color: #a5bddb; 
+            color: white;
+        }
+
+        .logo {
+            max-width: 100%;
+            margin-bottom: 10px;
+            max-height: 90px;
+            border-radius: 10px; /* Aggiunge angoli arrotondati */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1); /* Aggiunge ombra */
+        }
+
+        @media screen and (max-width: 600px) {
+            header {
+                padding: 15px;
+            }
+
+            main {
+                padding: 10px;
+            }
+
+            .logo {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Shin Wa Kan Karate <br> ti augura un </h1>
+        </header>
+
+        <main>
+            <form>
+                <div class="birthday-message">
+                    <center><p class="rainbow-text"><b id="birthdayText">BUON COMPLEANNO!</b></p></center>
+                </div>
+            </form>
+                <div class="foot">
+                    <button id="toggleButton"><b> Premi Qui!</b></button>
+                </div>
+            <form>
+                <div class="birthday-message">
+                    <center><img src="https://2.bp.blogspot.com/-4bpdSanvRus/VJV5hNJ6-MI/AAAAAAAAGvg/P9gVrPDg8nA/s1600/Shin%2BWa%2BKan%2BKarate_2014-2015_1.jpg" alt="Buon Compleanno"></center>
+                </div>
+            </form>
+        </main>
+
+        <center><img class="logo" src="https://tse3.mm.bing.net/th?id=OIP.VPXIxxCHgRxojldjeZNKtgHaFT&pid=Api&P=0&h=180" alt="Logo"></center>
+    </div>
+
+    <canvas id="cnv"></canvas>
+
+    <script>
+        var canvas;
+        var ctx;
+        var flakes_num = 1000;
+        var flakes = [];
+        var animazioneAttiva = false;
+        var intervalId;
+
+        function main() {
+            canvas = document.getElementById("cnv");
+            canvas.style.width = "100vw";
+            canvas.style.height = "100vh";
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx = canvas.getContext("2d");
+        }
+
+        function random(l, u) {
+            return l + Math.random() * (u - l + 1);
+        }
+
+        function createSnowFlakes() {
+            flakes = [];
+            for (var i = 0; i < flakes_num; i++) {
+                flakes.push({
+                    x: random(0, canvas.width),
+                    y: random(0, canvas.height),
+                    opacity: Math.random(),
+                    speedX: random(-3, 3),
+                    speedY: random(2, 7),
+                    radius: random(0.2, 3),
+                    color: getRandomColor(),
+                });
+            }
+        }
+
+        function getRandomColor() {
+            var letters = "0123456789ABCDEF";
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function drawSnowFlakes() {
+            for (var i = 0; i < flakes_num; i++) {
+                ctx.fillStyle = flakes[i].color;
+                ctx.beginPath();
+                ctx.arc(flakes[i].x, flakes[i].y, flakes[i].radius, 0, Math.PI * 2, false);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function snow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSnowFlakes();
+            for (var i = 0; i < flakes_num; i++) {
+                flakes[i].x += flakes[i].speedX;
+                flakes[i].y += flakes[i].speedY;
+                if (flakes[i].y > canvas.height) {
+                    flakes[i].x = random(0, canvas.width);
+                    flakes[i].y = -50;
+                }
+            }
+        }
+
+        function toggleAnimazioneNeve() {
+            if (!animazioneAttiva) {
+                createSnowFlakes();
+                intervalId = setInterval(snow, 50);
+            } else {
+                clearInterval(intervalId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            animazioneAttiva = !animazioneAttiva;
+        }
+
+        document.getElementById("toggleButton").addEventListener("click", toggleAnimazioneNeve);
+
+        window.onload = main;
+        main();  
+    </script>
+</body>
+
+</html>
